@@ -5,3 +5,4 @@ base:
     - iterm
     - funwith
     - spack
+    - vim
