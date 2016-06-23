@@ -1,4 +1,0 @@
-include:
-  - .libraries
-  - .languages
-  - .applications
