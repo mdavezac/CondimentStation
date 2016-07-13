@@ -67,10 +67,12 @@ def minion(prefix, user, sudo_user):
         'file_roots:\n'
         '  base:\n'
         '    - {prefix}/black-garlic\n'
-        '    - {prefix}/CondimentStation\n'.format(
+        '    - {prefix}/CondimentStation\n'
+        '    - {prefix}/black-garlic/projects\n'.format(
             prefix=prefix, user=user, sudo_user=sudo_user)
     )
-    etc.join('minion').mksymlinkto(etc.join('master'))
+    if not etc.join('minion').exists():
+        etc.join('minion').mksymlinkto(etc.join('master'))
 
 @cli.command(help="Add pillar with condiment station stuff")
 @click.argument('prefix', default=getcwd(), type=click.Path(), nargs=1)
