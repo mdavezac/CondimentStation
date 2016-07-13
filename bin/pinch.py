@@ -19,8 +19,19 @@ def sync(prefix):
     __opts__ = salt.config.minion_config(str(local(prefix).join('etc', 'minion')))
     __opts__['file_client'] = 'local'
     caller = salt.client.Caller(mopts=__opts__)
-    caller.cmd('saltutil.sync_all')
+    print(caller.cmd('saltutil.sync_all'))
 
+@cli.command(help="Make a call to salt")
+@click.argument('call', nargs=-1)
+@click.option('--prefix', default=getcwd(), type=click.Path())
+def call(call, prefix):
+    from py.path import local
+    import salt.client
+    import salt.config
+    __opts__ = salt.config.minion_config(str(local(prefix).join('etc', 'minion')))
+    __opts__['file_client'] = 'local'
+    caller = salt.client.Caller(mopts=__opts__)
+    print(caller.cmd(*call))
 
 if __name__ == '__main__':
     cli()
