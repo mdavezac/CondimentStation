@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! {{condiment_python}}
 from py.path import local
 import click
 import setup

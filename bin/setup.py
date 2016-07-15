@@ -1,8 +1,12 @@
-#! /usr/bin/env python
+#! {{condiment_python}}
 import click
 from os.path import dirname
-condiment_dir = dirname(dirname(__file__))
-default_prefix = dirname(condiment_dir)
+condiment_dir = "{{condiment_dir}}"
+if condiment_dir[0] == "{":
+    condiment_dir = dirname(dirname(__file__))
+default_prefix = "{{condiment_prefix}}"
+if default_prefix[0] == "{":
+    default_prefix = dirname(condiment_dir)
 
 
 def _options(prefix):
@@ -105,6 +109,7 @@ def minion(prefix, user, sudo_user):
 @click.argument('prefix', default=default_prefix, type=click.Path(), nargs=1)
 @click.option('--user', envvar='USER', help="Default user")
 def pillar(prefix, user):
+    from sys import executable
     from py.path import local
     directory = local(prefix).join('black-garlic', 'pillar')
     directory.ensure(dir=True)
@@ -113,8 +118,9 @@ def pillar(prefix, user):
         'user: {user}\n'
         'condiment_prefix: {prefix}\n'
         'condiment_dir: {condiment}\n'
+        'condiment_python: {executable}\n'
         'condiment_build_dir: {prefix}/build\n'.format(
-            condiment=condiment_dir, user=user, prefix=prefix)
+            condiment=condiment_dir, user=user, prefix=prefix, executable=executable)
     )
 
 
