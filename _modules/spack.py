@@ -18,8 +18,10 @@ log = logging.getLogger(__name__)
 def spack_directory():
     """ Specialized to avoid infinite recurrence """
     from os.path import join
-    default = join(__grains__['userhome'], 'spack')
-    return __salt__['pillar.get']('spack:directory', default)
+    root = __salt__['pillar.get']('condiment_build_dir', None)
+    if root is None:
+        root = __grains__['userhome']
+    return __salt__['pillar.get']('spack:directory', join(root, 'spack'))
 
 
 def defaults(key=None, value=None):
