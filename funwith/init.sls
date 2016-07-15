@@ -5,8 +5,6 @@ funwith:
   pkg.installed:
     - taps: homebrew/science
     - name: lmod
-    - require:
-      - pkg: languages
 
 {{workspaces}}:
   file.directory:
