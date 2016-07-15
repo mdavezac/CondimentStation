@@ -37,5 +37,11 @@ $virtenv/bin/python $condiment_dir/bin/pinch.py setup syspath $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup minion $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup pillar $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup sync
-$virtenv/bin/python $condiment_dir/bin/pinch.py run salt
-$virtenv/bin/python $condiment_dir/bin/pinch.py run condiments
+
+if [[ -d "$prefix/black-garlic/.git" ]] ; then
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run salt
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run condiments
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run spack
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run funwith
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run condiment_scripts
+fi
