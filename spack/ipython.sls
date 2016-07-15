@@ -1,4 +1,4 @@
-{{pillar['condiment_dir']}}/salt-env/share/scripts/spack_startup:
+{{pillar['condiment_build_dir']}}/salt-env/share/scripts/spack_startup:
   file.managed:
     - makedirs: True
     - contents: |
@@ -17,10 +17,10 @@
 
         import spack.cmd
 
-{{pillar['condiment_dir']}}/salt-env/bin/ispack:
+{{pillar['condiment_build_dir']}}/salt-env/bin/ispack:
   file.managed:
     - contents: |
-        PYTHONSTARTUP="{{pillar['condiment_dir']}}/salt-env/share/scripts/spack_startup" \
-        {{pillar['condiment_dir']}}/salt-env/bin/python -m IPython $@
+        PYTHONSTARTUP="{{pillar['condiment_build_dir']}}/salt-env/share/scripts/spack_startup" \
+        {{pillar['condiment_build_dir']}}/salt-env/bin/python -m IPython $@
     - mode: 744
 

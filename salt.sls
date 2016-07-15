@@ -7,4 +7,4 @@ salt packages:
       - mako
       - jinja2
     - upgrade: True
-    - bin_env: {{pillar['condiment_dir']}}/salt-env/bin/pip
+    - bin_env: {{pillar['condiment_build_dir']}}/salt-env/bin/pip
