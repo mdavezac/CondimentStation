@@ -1,7 +1,14 @@
 #! /usr/bin/env python
-from os import getcwd
+from py.path import local
 import click
 import setup
+
+default_prefix = setup.default_prefix
+
+
+def _options(prefix=default_prefix):
+    from py.path import local
+    return str(local(prefix).join('build', 'etc', 'salt', 'minion'))
 
 
 @click.group()
@@ -10,30 +17,27 @@ def cli():
 
 cli.add_command(setup.cli, 'setup')
 
-def _options(prefix):
-    from py.path import local
-    return str(local(prefix).join('build', 'etc', 'salt', 'minion'))
 
-@cli.command(help="Sync states and modules")
-@click.argument('prefix', default=getcwd(), type=click.Path(), nargs=1)
-def sync(prefix):
-    import salt.client
-    import salt.config
-    __opts__ = salt.config.minion_config(str(_options(prefix)))
-    __opts__['file_client'] = 'local'
-    caller = salt.client.Caller(mopts=__opts__)
-    print(caller.cmd('saltutil.sync_all'))
+@cli.command(help="Run a given state, or all states if none given")
+@click.option('--prefix', default=default_prefix, type=click.Path(), nargs=1)
+@click.argument('states', nargs=-1)
+def run(prefix, states):
+    setup.run_command(prefix, 'state.apply', *states)
+
 
 @cli.command(help="Make a call to salt")
 @click.argument('call', nargs=-1)
-@click.option('--prefix', default=getcwd(), type=click.Path())
-def call(call, prefix):
-    import salt.client
-    import salt.config
-    __opts__ = salt.config.minion_config(str(_options(prefix)))
-    __opts__['file_client'] = 'local'
-    caller = salt.client.Caller(mopts=__opts__)
-    print(caller.cmd(*call))
+@click.option('--prefix', default=default_prefix, type=click.Path())
+def call(prefix, call):
+    assert len(call) >= 1
+    setup.run_command(prefix, *call)
+
+
+@cli.command(help="Show a (the) given state(s) in yaml format")
+@click.argument('states', nargs=-1)
+@click.option('--prefix', default=default_prefix, type=click.Path())
+def show(states, prefix):
+    setup.run_command(prefix, 'state.show_sls', *states)
 
 if __name__ == '__main__':
     cli()
