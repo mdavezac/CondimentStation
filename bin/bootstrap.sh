@@ -36,6 +36,8 @@ $virtenv/bin/python $condiment_dir/bin/pinch.py setup server_hierarchy $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup syspath $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup minion $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup pillar $prefix
+$virtenv/bin/python $condiment_dir/bin/pinch.py setup sync
+$virtenv/bin/python $condiment_dir/bin/pinch.py run salt
 
 # cat > $pysaltdir/_syspaths.py <<EOF
 # ROOT_DIR="$(pwd)/build"
