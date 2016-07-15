@@ -93,8 +93,9 @@ def minion(prefix, user, sudo_user):
         '  base:\n'
         '    - {prefix}/black-garlic\n'
         '    - {prefix}/CondimentStation\n'
-        '    - {prefix}/black-garlic/projects\n'.format(
-            prefix=prefix, user=user, sudo_user=sudo_user)
+        '    - {prefix}/black-garlic/projects\n'
+        '    - {prefix}/\n'
+        .format(prefix=prefix, user=user, sudo_user=sudo_user)
     )
     if not etc.join('minion').exists():
         etc.join('minion').mksymlinkto(etc.join('master'))
