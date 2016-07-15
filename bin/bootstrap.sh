@@ -38,6 +38,7 @@ $virtenv/bin/python $condiment_dir/bin/pinch.py setup minion $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup pillar $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup sync
 $virtenv/bin/python $condiment_dir/bin/pinch.py run salt
+$virtenv/bin/python $condiment_dir/bin/pinch.py run condiments
 
 # cat > $pysaltdir/_syspaths.py <<EOF
 # ROOT_DIR="$(pwd)/build"
