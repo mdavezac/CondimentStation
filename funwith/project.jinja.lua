@@ -12,14 +12,6 @@ prepend_path("CMAKE_PREFIX_PATH", homedir)
 prepend_path("DYLD_LIBRARY_PATH", pathJoin(homedir, "lib"))
 prepend_path("PATH", pathJoin(homedir, "bin"))
 
-{% if virtualenv -%}
-setenv("VIRTUAL_ENV", "{{virtualenv}}")
-set_alias("pydoc", "python -m pydoc")
-{%     if virtualenv != homedir -%}
-prepend_path("PATH", pathJoin("{{virtualenv}}", "bin"))
-{%     endif -%}
-{% endif -%}
-
 {% if julia_package_dir -%}
 setenv("JULIA_PKGDIR", "{{julia_package_dir}}")
 {% endif -%}
@@ -46,6 +38,19 @@ elseif (mode() == "unload") then
   end
   unsetenv("_FUNWITH_DYLD_FALLBACK_LIBRARY_PATH")
 end
+
+{% if virtualenv -%}
+setenv("VIRTUAL_ENV", "{{virtualenv}}")
+set_alias("pydoc", "python -m pydoc")
+{%     if virtualenv != homedir -%}
+prepend_path("PATH", pathJoin("{{virtualenv}}", "bin"))
+prepend_path("LD_LIBRARY_PATH", pathJoin("{{virtualenv}}", "lib"))
+prepend_path("LD_LIBRARY_PATH", pathJoin("{{virtualenv}}", "lib64"))
+prepend_path("DYLD_FALLBACK_LIBRARY_PATH", pathJoin("{{virtualenv}}", "lib"))
+prepend_path("DYLD_FALLBACK_LIBRARY_PATH", pathJoin("{{virtualenv}}", "lib64"))
+{%     endif -%}
+{% endif -%}
+
 
 setenv("CURRENT_FUN_WITH", "{{project}}")
 setenv("HISTFILE", pathJoin(homedir, ".zhistory"))
