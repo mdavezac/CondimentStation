@@ -19,7 +19,21 @@ def cli():
     pass
 
 
-def run_command(prefix, command, *states):
+def get_pillar(prefix=default_prefix, item=None):
+    import salt.client
+    import salt.output.yaml_out
+    import salt.config
+    __opts__ = salt.config.minion_config(str(_options(prefix)))
+    __opts__['file_client'] = 'local'
+    # makes it possible to use password-protected ssh identity files
+    __opts__['__cli'] = ('salt-call', )
+    caller = salt.client.Caller(mopts=__opts__)
+    if item is None:
+        return caller.cmd('pillar.items')
+    return caller.cmd('pillar.item', item)
+
+
+def run_command(prefix, command, *states, **kwargs):
     import salt.client
     import salt.output.yaml_out
     import salt.config
@@ -31,10 +45,10 @@ def run_command(prefix, command, *states):
     output = salt.output.yaml_out
     output.__opts__ = __opts__
     if len(states) == 0:
-        print(output.output(caller.cmd(command)))
+        print(output.output(caller.cmd(command, **kwargs)))
     else:
         for state in states:
-            print(output.output(caller.cmd(command, state)))
+            print(output.output(caller.cmd(command, state, **kwargs)))
 
 
 @cli.command(help="link modules and friends to prefix")

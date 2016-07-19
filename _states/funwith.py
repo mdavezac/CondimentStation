@@ -4,7 +4,7 @@ def defaults(key=None, value=None):
 
 def prefix(name):
     """ Computes prefix for given project """
-    return __salt__['funwith.prefix'](name)
+    return __salt__['funwith.workspace'](name)
 
 def _get_prefix(name, prefix):
     from .funwith import prefix as prefix_fun
@@ -14,13 +14,7 @@ def _get_virtualenv(name, prefix, virtualenv):
     if virtualenv is None:
         return None
     if virtualenv is True:
-        virtualenv = {}
-    elif isinstance(virtualenv, str):
-        virtualenv = {'name': virtualenv}
-    else:
-        virtualenv = virtualenv.copy()
-    if 'name' not in virtualenv:
-        virtualenv['name'] = prefix
+        return prefix
     return virtualenv
 
 def _update_states(whole, parts):

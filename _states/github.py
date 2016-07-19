@@ -27,22 +27,7 @@ def _call(module, name, **kwargs):
 def latest(name, target=None, email=None, username=None, **kwargs):
     """ Sets up github repo """
     # Make sure we set up tracking
-    if 'rev' not in kwargs:
-        kwargs['rev'] = kwargs.get('branch', 'master')
     result = _call(__states__['git.latest'], name, target=target, **kwargs)
-    if target is not None:
-        result.update(_config_set(target, email=email, username=username))
-    return result
-
-
-def present(name, target=None, email=None, username=None, **kwargs):
-    """ Sets up github repo """
-    from os.path import join
-    # Make sure we set up tracking
-    if 'rev' not in kwargs:
-        kwargs['rev'] = kwargs.get('branch', 'master')
-    result = _call(__states__['git.present'], name, target=target,
-                   email=email, username=username, **kwargs)
     if target is not None:
         result.update(_config_set(target, email=email, username=username))
     return result
