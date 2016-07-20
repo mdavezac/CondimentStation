@@ -36,7 +36,7 @@ def add_vimrc(name, source_dir=None, width=None, tabs=None,
         makeprg = __salt__['pillar.get'](
             'vim:makeprg', 'ninja\ -C\ {0}/build\ -v'.format(source_dir))
     elif makeprg is True and source_dir is None:
-        raise Execption("Need a source dir to figure out makeprg")
+        raise Exception("Need a source dir to figure out makeprg")
     defaults = {
         'prefix': name,
         'width': width,
