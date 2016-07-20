@@ -50,7 +50,7 @@ def _get_pillar(prefix, compiler, python):
 @click.argument('states', nargs=-1)
 def run(prefix, states, python, compiler):
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, 'state.apply', *states, pillars=pillars)
+    setup.run_command(prefix, 'state.apply', *states, pillar=pillars)
 
 
 @cli.command(help="Make a call to salt")
@@ -63,7 +63,7 @@ def run(prefix, states, python, compiler):
 def call(prefix, call, python, compiler):
     assert len(call) >= 1
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, *call, pillars=pillars)
+    setup.run_command(prefix, *call, pillar=pillars)
 
 
 @cli.command(help="Show a (the) given state(s) in yaml format")
@@ -75,7 +75,7 @@ def call(prefix, call, python, compiler):
               help="Default python")
 def show(states, prefix, compiler, python):
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, 'state.show_sls', *states)
+    setup.run_command(prefix, 'state.show_sls', *states, pillar=pillars)
 
 if __name__ == '__main__':
     cli()
