@@ -37,4 +37,5 @@ if [[ -d "$prefix/black-garlic/.git" ]] ; then
   $virtenv/bin/python $condiment_dir/bin/pinch.py run spack
   $virtenv/bin/python $condiment_dir/bin/pinch.py run funwith
   $virtenv/bin/python $condiment_dir/bin/pinch.py run condiment_scripts
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run black-garlic
 fi
