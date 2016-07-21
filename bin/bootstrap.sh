@@ -5,18 +5,11 @@ prefix=$(pwd)
 condiment_dir=$prefix/CondimentStation
 virtenv=$prefix/build/salt-env
 pysaltdir=$virtenv/lib/python2.7/site-packages/salt
-mainrepo=git@github.com:mdavezac/CondimentStation
+condiment_repo=git@github.com:UCL-RITS/CondimentStation.git
 
 mkdir -p $(pwd)/build
 
 if [ ! -d "$virtenv" ]; then
-  # if [[ "$(uname)" -eq "Darwin" ]] ; then
-  #   curl -L https://bootstrap.pypa.io/get-pip.py -o build/get-pip.py
-  #   sudo python build/get-pip.py
-  #   sudo pip install --upgrade pip virtualenv
-  # else
-  #   sudo apt-get install python-dev python-pip python-virtualenv
-  # fi
   python -m virtualenv $virtenv
   . $virtenv/bin/activate
   pip install --upgrade pip salt click GitPython mako pytest
@@ -29,7 +22,7 @@ then
 fi
 
 if [[ ! -e "$condiment_dir/bin/pinch.py" ]] ; then
-  git clone git@github.com:mdavezac/CondimentStation -b CondimentStation
+  git clone $condiment_repo
 fi
 
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup server_hierarchy $prefix
