@@ -47,10 +47,11 @@ def _get_pillar(prefix, compiler, python):
               help="Compiler collection for spack modules")
 @click.option('--python', default=None, type=str, nargs=1,
               help="Default python")
+@click.option('--verbose', is_flag=True, help="Verbose output")
 @click.argument('states', nargs=-1)
-def run(prefix, states, python, compiler):
+def run(prefix, states, python, compiler, verbose):
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, 'state.apply', *states, pillar=pillars, minimize=True)
+    setup.run_command(prefix, 'state.apply', *states, pillar=pillars, minimize=not verbose)
 
 
 @cli.command(help="Make a call to salt")
