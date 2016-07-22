@@ -107,8 +107,6 @@ def installed(
     if not (isinstance(pkgs, list) and len(pkgs) != 0):
         pkgs = [name]
 
-    for u in __salt__:
-        print(u)
     current = __salt__['cask.list_pkgs']()
     new_pkgs = [u for u in pkgs if u not in current]
     if len(new_pkgs) == 0:
