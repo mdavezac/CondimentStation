@@ -21,7 +21,6 @@ def cli():
 
 def get_pillar(prefix=default_prefix, item=None):
     import salt.client
-    import salt.output.yaml_out
     import salt.config
     __opts__ = salt.config.minion_config(str(_options(prefix)))
     __opts__['file_client'] = 'local'
@@ -33,22 +32,39 @@ def get_pillar(prefix=default_prefix, item=None):
     return caller.cmd('pillar.item', item)
 
 
+def display_output(result, opts):
+    import salt.output
+    isgood = lambda x: (not isinstance(x, dict)) or x.get('result', True)
+    passback = lambda x: x if not isinstance(x, dict) else "passed"
+    passed = {k: passback(v) for k, v in result.items() if isgood(v)}
+    failed = {k: v for k, v in result.items() if isgood(v) == False}
+    if len(passed):
+        salt.output.display_output(passed, None, opts)
+    if len(failed):
+        salt.output.display_output(failed, None, opts)
+        return False
+    return True
+
+
 def run_command(prefix, command, *states, **kwargs):
     import salt.client
-    import salt.output.yaml_out
     import salt.config
     __opts__ = salt.config.minion_config(str(_options(prefix)))
     __opts__['file_client'] = 'local'
     # makes it possible to use password-protected ssh identity files
     __opts__['__cli'] = ('salt-call', )
     caller = salt.client.Caller(mopts=__opts__)
-    output = salt.output.yaml_out
-    output.__opts__ = __opts__
+    passed = True
     if len(states) == 0:
-        print(output.output(caller.cmd(command, **kwargs)))
+        ret = caller.cmd(command, **kwargs)
+        passed &= display_output(ret, __opts__)
     else:
         for state in states:
-            print(output.output(caller.cmd(command, state, **kwargs)))
+            ret = caller.cmd(command, state, **kwargs)
+            passed &= display_output(ret, __opts__)
+
+    if not passed:
+        raise Exception("Some salt state failed")
 
 
 @cli.command(help="link modules and friends to prefix")
@@ -66,7 +82,8 @@ def server_hierarchy(prefix):
 
     local(prefix).join('build', 'etc', 'salt').ensure(dir=True)
     local(prefix).join('build', 'var', 'log', 'salt').ensure(dir=True)
-    local(prefix).join('build', 'var', 'cache', 'salt', 'master').ensure(dir=True)
+    local(prefix).join('build', 'var', 'cache',
+                       'salt', 'master').ensure(dir=True)
 
 
 @cli.command(help="Overwrites default salt paths")
@@ -146,7 +163,8 @@ def pillar(prefix, user):
 def blackgarlic(prefix, repo, branch, subdir):
     from py.path import local
     from git import Repo
-    Repo.clone_from(repo, str(local(prefix).join('black-garlic')), branch=branch)
+    Repo.clone_from(
+        repo, str(local(prefix).join('black-garlic')), branch=branch)
 
 
 @cli.command(help="Runs bootstrap states")
