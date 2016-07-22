@@ -4,6 +4,6 @@ condiment_station:
         - prefix: {{pillar['condiment_prefix']}}
         - virtualenv: {{pillar['condiment_build_dir']}}/salt-env
 
-mdavezac/CondimentStation:
+UCL-RITS/CondimentStation:
   github.latest:
     - target: {{pillar['condiment_dir']}}
