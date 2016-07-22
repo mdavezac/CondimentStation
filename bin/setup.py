@@ -32,10 +32,13 @@ def get_pillar(prefix=default_prefix, item=None):
     return caller.cmd('pillar.item', item)
 
 
-def display_output(result, opts):
+def display_output(result, opts, minimize=True):
     import salt.output
     isgood = lambda x: (not isinstance(x, dict)) or x.get('result', True)
-    passback = lambda x: x if not isinstance(x, dict) else "passed"
+    if minimize:
+        passback = lambda x: x if not isinstance(x, dict) else "passed"
+    else:
+        passback = lambda x: x
     passed = {k: passback(v) for k, v in result.items() if isgood(v)}
     failed = {k: v for k, v in result.items() if isgood(v) == False}
     if len(passed):
@@ -49,6 +52,7 @@ def display_output(result, opts):
 def run_command(prefix, command, *states, **kwargs):
     import salt.client
     import salt.config
+    minimize = kwargs.pop('minimize', True)
     __opts__ = salt.config.minion_config(str(_options(prefix)))
     __opts__['file_client'] = 'local'
     # makes it possible to use password-protected ssh identity files
@@ -57,11 +61,11 @@ def run_command(prefix, command, *states, **kwargs):
     passed = True
     if len(states) == 0:
         ret = caller.cmd(command, **kwargs)
-        passed &= display_output(ret, __opts__)
+        passed &= display_output(ret, __opts__, minimize=minimize)
     else:
         for state in states:
             ret = caller.cmd(command, state, **kwargs)
-            passed &= display_output(ret, __opts__)
+            passed &= display_output(ret, __opts__, minimize=minimize)
 
     if not passed:
         raise Exception("Some salt state failed")
@@ -176,7 +180,7 @@ def initial_states(prefix):
 @cli.command(help="Sync states and modules")
 @click.argument('prefix', default=default_prefix, type=click.Path(), nargs=1)
 def sync(prefix):
-    run_command(prefix, 'saltutil.sync_all')
+    run_command(prefix, 'saltutil.sync_all', minimize=False)
 
 
 if __name__ == '__main__':
