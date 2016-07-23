@@ -58,6 +58,19 @@ prepend_path("DYLD_FALLBACK_LIBRARY_PATH", pathJoin("{{virtualenv}}", "lib64"))
 setenv("CURRENT_FUN_WITH", "{{project}}")
 setenv("HISTFILE", pathJoin(homedir, ".zhistory"))
 
+{% if cc is not none -%}
+setenv('cc', "{{cc}}")
+{% endif -%}
+{% if cxx is not none -%}
+setenv('cxx', "{{cxx}}")
+{% endif -%}
+{% if fc is not none -%}
+setenv('fc', "{{fc}}")
+{% endif -%}
+{% if f77 is not none -%}
+setenv('f77', "{{f77}}")
+{% endif -%}
+
 {% if footer -%}
 {{footer}}
 {% endif -%}

@@ -2,13 +2,16 @@ def defaults(key=None, value=None):
     """ Default pillar values """
     return __salt__['funwith.defaults'](key, value)
 
+
 def prefix(name):
     """ Computes prefix for given project """
     return __salt__['funwith.workspace'](name)
 
+
 def _get_prefix(name, prefix):
     from .funwith import prefix as prefix_fun
     return prefix if prefix is not None else prefix_fun(name)
+
 
 def _get_virtualenv(name, prefix, virtualenv):
     if virtualenv is None:
@@ -16,6 +19,7 @@ def _get_virtualenv(name, prefix, virtualenv):
     if virtualenv is True:
         return prefix
     return virtualenv
+
 
 def _update_states(whole, parts):
     if (not __opts__['test']) and parts['result'] == False:
@@ -48,7 +52,7 @@ def add_vimrc(name, source_dir=None, width=None, tabs=None,
     return __states__['file.managed'](
         join(name, '.vimrc'),
         source='salt://funwith/vimrc.jinja',
-        defaults = defaults,
+        defaults=defaults,
         template='jinja'
     )
 
@@ -67,7 +71,7 @@ def add_cppconfig(name, prefix=None, source_dir=None, includes=None,
         if len(include) == 0:
             continue
         if include[0] == "/":
-          lines.append("-I" + include)
+            lines.append("-I" + include)
         else:
             lines.append("-I" + join(prefix, include))
     if source_includes is not None and source_dir is None:
@@ -92,6 +96,7 @@ def add_cppconfig(name, prefix=None, source_dir=None, includes=None,
         contents='\n'.join(lines)
     )
 
+
 def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
                spack=None, modules=None, compiler=None, **kwargs):
     from subprocess import check_output
@@ -103,8 +108,19 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
     if spack is None:
         spack = []
     for package in spack:
-        modules.extend(__salt__['spack.module_name'](package, compiler=compiler))
+        modules.extend(__salt__['spack.module_name']
+                       (package, compiler=compiler))
 
+    compiler_suite = compiler
+    if compiler_suite is None:
+        compiler_suite = __salt__['pillar.get']('compiler', None)
+    cc, cxx, fc, f77 = None, None, None, None
+    if compiler_suite is not None and len(compiler_suite) != "":
+        compiler = __salt__['spack.compiler'](compiler_suite)
+        cc = compiler.cc if compiler.cc else None
+        cxx = compiler.cxx if compiler.cxx else None
+        fc = compiler.fc if compiler.fc else None
+        f77 = compiler.fc if compiler.fc else None
     virtualenv = _get_virtualenv(name, prefix, virtualenv)
 
     context = {
@@ -114,6 +130,10 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
         'footer': footer,
         'virtualenv': virtualenv,
         'modules': modules,
+        'cc': cc,
+        'cxx': cxx,
+        'fc': fc,
+        'f77': f77,
         'julia_package_dir': None
     }
     return __states__['file.managed'](
@@ -121,6 +141,7 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
         source='salt://funwith/project.jinja.lua',
         template='jinja', context=context, **kwargs
     )
+
 
 def present(name, prefix=None, cwd=None, github=None, srcname=None, email=None,
             username=None, footer=None, ctags=False, virtualenv=None,
@@ -166,8 +187,8 @@ def present(name, prefix=None, cwd=None, github=None, srcname=None, email=None,
         dir = __states__['file.directory'](cwd)
         _update_states(result, dir)
     if github is not None:
-        vcs =  __states__['github.present'](github, email=email,
-                                            username=username, target=target)
+        vcs = __states__['github.present'](github, email=email,
+                                           username=username, target=target)
         _update_states(result, vcs)
         if ctags:
             ctag = __states__['ctags.run'](target, exclude=['.git', 'build'])
@@ -176,9 +197,9 @@ def present(name, prefix=None, cwd=None, github=None, srcname=None, email=None,
     if vimrc:
         args = vimrc.copy() if isinstance(vimrc, dict) else {}
         vim = add_vimrc(
-                prefix, source_dir=target, cppconfig=cppconfig,
-                **args
-            )
+            prefix, source_dir=target, cppconfig=cppconfig,
+            **args
+        )
         _update_states(result, vim)
 
     if cppconfig:
