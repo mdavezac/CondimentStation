@@ -178,9 +178,9 @@ def is_installed(name, compiler=None):
             name = ' '.join(name)
         specs = parse_specs(name, concretize=True)
         for spec in specs:
-           a = repo.get(spec)
-           if not a.installed:
-               return False
+            a = repo.get(spec)
+            if not a.installed:
+                return False
     return True
 
 
@@ -216,3 +216,15 @@ def install(name, keep_prefix=False, keep_stage=False, ignore_deps=False, enviro
             )
     return [p.name for p in new_pkgs if p.installed], \
         [p.name for p in new_pkgs if not p.installed]
+
+
+def compiler(spec):
+    _init_spack()
+    from spack.compilers import compilers_for_spec
+    from spack.spec import CompilerSpec
+    compilers = compilers_for_spec(CompilerSpec(spec))
+    if len(compilers) == 0:
+        raise ValueError("Incorrect/Unknown spec: %s" % spec)
+    elif len(compilers) > 1:
+        raise ValueError("Found more than one compiler %s" % compilers)
+    return compilers[0]
