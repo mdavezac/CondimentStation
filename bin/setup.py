@@ -36,7 +36,13 @@ def display_output(result, opts, minimize=True):
     import salt.output
     isgood = lambda x: (not isinstance(x, dict)) or x.get('result', True)
     if minimize:
-        passback = lambda x: x if not isinstance(x, dict) else "passed"
+        def passback(x):
+            if not isinstance(x, dict):
+                return x
+            if len(x.get('changes', '')):
+                return x['changes']
+            else:
+                return "passed"
     else:
         passback = lambda x: x
     passed = {k: passback(v) for k, v in result.items() if isgood(v)}
