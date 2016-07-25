@@ -34,6 +34,10 @@ def get_pillar(prefix=default_prefix, item=None):
 
 def display_output(result, opts, minimize=True):
     import salt.output
+    if isinstance(result, list):
+        salt.output.display_output(result, None, opts)
+        return False
+
     isgood = lambda x: (not isinstance(x, dict)) or x.get('result', True)
     if minimize:
         def passback(x):
