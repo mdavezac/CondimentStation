@@ -51,7 +51,8 @@ def _get_pillar(prefix, compiler, python):
 @click.argument('states', nargs=-1)
 def run(prefix, states, python, compiler, verbose):
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, 'state.apply', *states, pillar=pillars, minimize=not verbose)
+    setup.run_command(prefix, 'state.apply', *states,
+                      pillar=pillars, minimize=not verbose)
 
 
 @cli.command(help="Make a call to salt")
@@ -76,15 +77,18 @@ def call(prefix, call, python, compiler):
               help="Default python")
 def show(states, prefix, compiler, python):
     pillars = _get_pillar(prefix, compiler, python)
-    setup.run_command(prefix, 'state.show_sls', *states, pillar=pillars, minimize=False)
+    setup.run_command(prefix, 'state.show_sls', *states,
+                      pillar=pillars, minimize=False)
 
 
 @cli.command(help="Update to latest CondimentStation")
 @click.argument('prefix', default=default_prefix, type=click.Path(), nargs=1)
 def update(prefix):
+    setup.run_command(prefix, 'state.apply',
+                      'condiment_scripts', minimize=True)
     setup.run_command(prefix, 'saltutil.sync_all', minimize=False)
     setup.run_command(prefix, 'state.apply', 'salt', 'condiments', 'spack', 'funwith',
-                      'condiment_scripts', 'black-garlic', minimize=True)
+                      'black-garlic', minimize=True)
 
 
 if __name__ == '__main__':
