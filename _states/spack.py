@@ -55,8 +55,7 @@ def add_repo(name, github=None, scope=None, prefix=None):
     target = __salt__['spack.repo_path'](name)
 
     if github is not None:
-        spackdir = __salt__['pillar.get'](
-            'spack:directory', expanduser(join("~", "spack")))
+        spackdir = __salt__['spack.spack_directory']()
         __states__['github.latest'](name=github, target=target)
 
     if __salt__['spack.repo_exists'](target):
