@@ -33,7 +33,7 @@ def _get_python(prefix, python):
     result = setup.get_pillar(prefix, 'python')['python']
     if len(result) > 0:
         return result
-    return "python2"
+    return "python3"
 
 
 def _get_pillar(prefix, compiler, python):
