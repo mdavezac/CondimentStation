@@ -5,7 +5,6 @@ spack:
     - order: 0
     - target: {{directory}}
     - name: llnl/spack.git
-    - email: mdavezac@gmail.com
     - rev: develop
 
 {% set spack = salt['pillar.get']('spack', {}) %}
