@@ -53,7 +53,9 @@ def list_pkgs(check_context=True, **kwargs):
     for line in out.splitlines():
         name_and_versions = line.split(' ')
         name = name_and_versions[0]
-        __salt__['pkg_resource.add_pkg'](ret, name, 'present')
+        is_installed = _call_cask('brew cask info ' + name)['stdout']
+        if 'Not installed' not in is_installed:
+            __salt__['pkg_resource.add_pkg'](ret, name, 'present')
 
     __salt__['pkg_resource.sort_pkglist'](ret)
     __context__['cask.list_pkgs'] = copy.deepcopy(ret)
