@@ -59,16 +59,16 @@ setenv("CURRENT_FUN_WITH", "{{project}}")
 setenv("HISTFILE", pathJoin(homedir, ".zhistory"))
 
 {% if cc is not none -%}
-setenv('cc', "{{cc}}")
+setenv('CC', "{{cc}}")
 {% endif -%}
 {% if cxx is not none -%}
-setenv('cxx', "{{cxx}}")
+setenv('CXX', "{{cxx}}")
 {% endif -%}
 {% if fc is not none -%}
-setenv('fc', "{{fc}}")
+setenv('FC', "{{fc}}")
 {% endif -%}
 {% if f77 is not none -%}
-setenv('f77', "{{f77}}")
+setenv('F77', "{{f77}}")
 {% endif -%}
 
 {% if footer -%}
