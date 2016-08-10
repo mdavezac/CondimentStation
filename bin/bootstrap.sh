@@ -32,5 +32,6 @@ $virtenv/bin/python $condiment_dir/bin/pinch.py setup pillar $prefix
 $virtenv/bin/python $condiment_dir/bin/pinch.py setup sync
 
 if [[ -d "$prefix/black-garlic/.git" ]] ; then
-  $virtenv/bin/python $condiment_dir/bin/pinch.py update
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run salt condiments spack
+  $virtenv/bin/python $condiment_dir/bin/pinch.py run funwith black-garlic
 fi
