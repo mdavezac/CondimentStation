@@ -40,7 +40,7 @@ Usage
 Once installed, you should be able to do:
 
 ```bash
-module load black-garlic
+module load condiment_station
 ```
 
 This will setup your environment so you can run states. The states are the `.sls` files found
