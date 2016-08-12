@@ -7,3 +7,4 @@ condiment_station:
 UCL-RITS/CondimentStation:
   github.latest:
     - target: {{pillar['condiment_dir']}}
+    - force_fetch: True
