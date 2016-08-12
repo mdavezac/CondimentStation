@@ -6,6 +6,7 @@ spack:
     - target: {{directory}}
     - name: llnl/spack.git
     - rev: develop
+    - force_fetch: True
 
 {% set spack = salt['pillar.get']('spack', {}) %}
 {% if spack.get('add_to_zprofile', False) %}
