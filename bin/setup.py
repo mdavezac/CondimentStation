@@ -1,4 +1,5 @@
 #! {{condiment_python}}
+from sys import exit
 import click
 from os.path import dirname
 condiment_dir = "{{condiment_dir}}"
@@ -78,7 +79,8 @@ def run_command(prefix, command, *states, **kwargs):
             passed &= display_output(ret, __opts__, minimize=minimize)
 
     if not passed:
-        raise Exception("Some salt state failed")
+        print("Some salt state failed")
+        exit(1)
 
 
 @cli.command(help="link modules and friends to prefix")
