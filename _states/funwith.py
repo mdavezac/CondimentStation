@@ -51,7 +51,7 @@ def add_vimrc(name, source_dir=None, width=None, tabs=None,
     defaults.update(**kwargs)
     return __states__['file.managed'](
         join(name, '.vimrc'),
-        source='salt://funwith/vimrc.jinja',
+        source=['salt://files/funwith/vimrc.jinja', 'salt://funwith/vimrc.jinja'],
         defaults=defaults,
         template='jinja'
     )
@@ -138,7 +138,7 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
     }
     return __states__['file.managed'](
         join(defaults('modulefiles'), name + ".lua"),
-        source='salt://funwith/project.jinja.lua',
+        source=['salt://files/funwith/project.jinja.lua', 'salt://funwith/project.jinja.lua'],
         template='jinja', context=context, **kwargs
     )
 
