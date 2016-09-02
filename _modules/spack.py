@@ -72,13 +72,8 @@ def module_name(name, compiler=None):
     specs = parse_specs(name, concretize=True, normalize=True)
     result = []
     for spec in specs:
-        mods = installed_db.query(spec)
-        if len(mods) == 0:
-            raise ValueError("No module found for %s." % spec)
-        elif len(mods) > 1:
-            raise ValueError(
-                "More than one module matches %s (%s)." % (spec, mods))
-        result.append(mt(mods[0]).use_name)
+        mods = {pkg.dag_hash(): pkg for pkg in installed_db.query(spec)}
+        result.append(mt(mods[spec.dag_hash()]).use_name)
     return result
 
 
