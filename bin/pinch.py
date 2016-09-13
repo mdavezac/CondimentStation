@@ -68,6 +68,14 @@ def call(prefix, call, python, compiler):
     setup.run_command(prefix, *call, pillar=pillars, minimize=False)
 
 
+@cli.command(help="Make a raw call to salt")
+@click.option('--prefix', default=default_prefix, type=click.Path())
+@click.argument('call', nargs=-1)
+def rawcall(prefix, call):
+    assert len(call) >= 1
+    setup.run_command(prefix, *call, minimize=False)
+
+
 @cli.command(help="Show a (the) given state(s) in yaml format")
 @click.argument('states', nargs=-1)
 @click.option('--prefix', default=default_prefix, type=click.Path())
