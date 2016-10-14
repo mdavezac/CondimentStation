@@ -179,7 +179,7 @@ def is_installed(name, compiler=None):
     return True
 
 
-def install(name, keep_prefix=False, keep_stage=False, ignore_deps=False, environs=None, compiler=None):
+def install(name, keep_prefix=False, keep_stage=False, install_deps=True, environs=None, compiler=None):
     _init_spack()
     from spack import repo, installed_db
     from spack.cmd import parse_specs
@@ -188,7 +188,7 @@ def install(name, keep_prefix=False, keep_stage=False, ignore_deps=False, enviro
         results = [], []
         for pkg in name:
             a, b = install(pkg, keep_prefix=keep_prefix, keep_stage=keep_stage,
-                           ignore_deps=ignore_deps, environs=environs,
+                           install_deps=install_deps, environs=environs,
                            compiler=compiler)
             results[0].extend(a)
             results[1].extend(b)
@@ -207,7 +207,7 @@ def install(name, keep_prefix=False, keep_stage=False, ignore_deps=False, enviro
             package.do_install(
                 keep_prefix=keep_prefix,
                 keep_stage=keep_stage,
-                ignore_deps=ignore_deps
+                install_deps=install_deps
             )
     return [p.name for p in new_pkgs if p.installed], \
         [p.name for p in new_pkgs if not p.installed]
