@@ -61,7 +61,7 @@ def module_name(name, compiler=None):
     """ Figures out module name(s) from specs """
     _init_spack()
     from spack.modules import module_types
-    from spack import installed_db
+    from spack.store import db as installed_db
     mt = module_types['tcl']
 
     if compiler is not None:
@@ -183,7 +183,8 @@ def is_installed(name, compiler=None):
 
 def install(name, keep_prefix=False, keep_stage=False, install_deps=True, environs=None, compiler=None):
     _init_spack()
-    from spack import repo, installed_db
+    from spack import repo
+    from spack.store import db as installed_db
     from spack.cmd import parse_specs
     from os import environ
     if not isinstance(name, str):
