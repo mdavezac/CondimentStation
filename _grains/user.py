@@ -44,10 +44,11 @@ def _programs(program, bin=None, prefix="/usr/local/Cellar"):
         bin = program
 
     result = {}
-    paths = join(prefix, program, "[0-9].[0-9].[0-9]*", "bin", bin)
+    paths = join(prefix, program, "[0-9]*.[0-9]*", "bin", bin)
     for path in glob(join(paths)):
-        v = search(r"\/(\d\.\d\.\d+)(?:_\d+)?\/", path).group(1)
-        result[program + "@" + v] = path
+        v = search(r"\/(\d+\.\d+(?:\.\d+)?)(?:_\d+)?\/", path)
+        if v is not None:
+            result[program + "@" + v.group(1)] = path
 
     return {program + "s": result}
 
