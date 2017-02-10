@@ -36,9 +36,19 @@ def _get_python(prefix, python):
     return "python3"
 
 
-def _get_pillar(prefix, compiler, python):
+def _get_mpi(prefix, mpi):
+    if mpi is not None and len(mpi) > 0:
+        return mpi
+    result = setup.get_pillar(prefix, 'mpi')['mpi']
+    if len(result) > 0:
+        return result
+    return "openmpi"
+
+
+def _get_pillar(prefix, compiler, python, mpi):
     return {'compiler': _get_compiler(prefix, compiler),
-            'python': _get_python(prefix, python)}
+            'python': _get_python(prefix, python),
+            'mpi': _get_mpi(prefix, mpi)}
 
 
 @cli.command(help="Run a given state, or all states if none given")
@@ -47,10 +57,12 @@ def _get_pillar(prefix, compiler, python):
               help="Compiler collection for spack modules")
 @click.option('--python', default=None, type=str, nargs=1,
               help="Default python")
+@click.option('--mpi', default=None, type=str, nargs=1,
+              help="Default mpi")
 @click.option('--verbose', is_flag=True, help="Verbose output")
 @click.argument('states', nargs=-1)
-def run(prefix, states, python, compiler, verbose):
-    pillars = _get_pillar(prefix, compiler, python)
+def run(prefix, states, python, compiler, mpi, verbose):
+    pillars = _get_pillar(prefix, compiler, python, mpi)
     setup.run_command(prefix, 'state.apply', *states,
                       pillar=pillars, minimize=not verbose)
 
@@ -62,9 +74,11 @@ def run(prefix, states, python, compiler, verbose):
               help="Compiler collection for spack modules")
 @click.option('--python', default=None, type=str, nargs=1,
               help="Default python")
-def call(prefix, call, python, compiler):
+@click.option('--mpi', default=None, type=str, nargs=1,
+              help="Default mpi")
+def call(prefix, call, python, compiler, mpi):
     assert len(call) >= 1
-    pillars = _get_pillar(prefix, compiler, python)
+    pillars = _get_pillar(prefix, compiler, python, mpi)
     setup.run_command(prefix, *call, pillar=pillars, minimize=False)
 
 
@@ -83,8 +97,10 @@ def rawcall(prefix, call):
               help="Compiler collection for spack modules")
 @click.option('--python', default=None, type=str, nargs=1,
               help="Default python")
-def show(states, prefix, compiler, python):
-    pillars = _get_pillar(prefix, compiler, python)
+@click.option('--mpi', default=None, type=str, nargs=1,
+              help="Default mpi")
+def show(states, prefix, compiler, python, mpi):
+    pillars = _get_pillar(prefix, compiler, python, mpi)
     setup.run_command(prefix, 'state.show_sls', *states,
                       pillar=pillars, minimize=False)
 
