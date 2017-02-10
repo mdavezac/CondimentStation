@@ -22,6 +22,10 @@ spack zprofile:
 spack compilers:
   file.managed:
     - name: {{config_dir}}/compilers.yaml
+    - template: jinja
+    - defaults:
+        mac_version: {{grains['mac_version']}}
+        gccs: {{grains['gccs']}}
     - source: {{spack['compilers_file']}}
     - makedirs: True
 {% endif %}
@@ -30,6 +34,12 @@ spack compilers:
 spack external packages:
   file.managed:
     - name: {{config_dir}}/packages.yaml
+    - template: jinja
+    - defaults:
+        pythons: {{grains['pythons']}}
+        cmakes: {{grains['cmakes']}}
+        gits: {{grains['gits']}}
+        pcres: {{grains['pcres']}}
     - source: {{spack['external_packages']}}
     - makedirs: True
 {% endif %}
