@@ -116,7 +116,7 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
         compiler_suite = __salt__['pillar.get']('compiler', None)
     cc, cxx, fc, f77 = None, None, None, None
     if compiler_suite is not None and len(compiler_suite) != "":
-        compiler = __salt__['spack.compiler'](compiler_suite)
+        compiler = __salt__['spack.compiler_suite'](compiler_suite)
         cc = compiler.cc if compiler.cc else None
         cxx = compiler.cxx if compiler.cxx else None
         fc = compiler.fc if compiler.fc else None

@@ -216,13 +216,19 @@ def install(name, keep_prefix=False, keep_stage=False, install_deps=True, enviro
         [p.name for p in new_pkgs if not p.installed]
 
 
-def compiler(spec):
+def compiler_suite(spec=None):
     _init_spack()
     from spack.compilers import compilers_for_spec
     from spack.spec import CompilerSpec
-    compilers = compilers_for_spec(CompilerSpec(spec))
-    if len(compilers) == 0:
-        raise ValueError("Incorrect/Unknown spec: %s" % spec)
-    elif len(compilers) > 1:
-        raise ValueError("Found more than one compiler %s" % compilers)
-    return compilers[0]
+
+    if spec is None:
+        spec = __salt__['pillar.get']("compiler", "gcc")
+
+    compiler = max(compilers_for_spec(
+        CompilerSpec(spec)), key=lambda x: x.version)
+    return compiler
+
+
+def compiler(spec=None):
+    suite = compiler_suite(spec)
+    return "{}@{}".format(suite.name, suite.version)
