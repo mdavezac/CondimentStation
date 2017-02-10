@@ -111,8 +111,9 @@ Exemplar project file
 ---------------------
 
 ```YAML
-{% set compiler = salt['pillar.get']('compiler', 'gcc') %}
-{% set python = salt['pillar.get']('python', 'python2') %}
+{% set compiler = salt["spack.compiler"]() %}
+{% set python = salt['pillar.get']('python', 'python3') %}
+{% set mpilib = salt['pillar.get']('mpi', 'openmpi') %}
 {% set project = sls.split('.')[-1] %}
 {% set workspace = salt['funwith.workspace'](project) %}
 
