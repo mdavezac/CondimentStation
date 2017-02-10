@@ -1,4 +1,7 @@
 import salt.utils
+from os.path import splitext, split
+
+gitname = splitext(split(__file__)[1])[0]
 
 
 def _config_set(repo, email=None, username=None):
@@ -16,9 +19,9 @@ def _config_set(repo, email=None, username=None):
 def _call(module, name, **kwargs):
     from os.path import exists, join, expanduser
     from getpass import getuser
-    name = "git@github.com:" + name
+    name = "git@{0}.com:{1}".format(gitname, name)
     user = kwargs.get('user', getuser())
-    identity = expanduser("~{0}/.ssh/github_rsa".format(user))
+    identity = expanduser("~{0}/.ssh/{1}_rsa".format(gitname, user))
     if 'identity' not in kwargs and exists(identity):
         kwargs['identity'] = identity
     return module(name, **kwargs)
@@ -31,3 +34,4 @@ def latest(name, target=None, email=None, username=None, **kwargs):
     if target is not None:
         result.update(_config_set(target, email=email, username=username))
     return result
+latest.__doc__ = latest.__doc__.replace("github", gitname)
