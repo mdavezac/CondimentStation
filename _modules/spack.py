@@ -232,3 +232,56 @@ def compiler_suite(spec=None):
 def compiler(spec=None):
     suite = compiler_suite(spec)
     return "{}@{}".format(suite.name, suite.version)
+
+
+def spec(spec=None, pillar=None, default=None):
+    """ Returns concretized spec object """
+    _init_spack()
+    from spack.spec import Spec
+
+    if spec is None and pillar is None and default is None:
+        raise Exception("No spec given")
+    elif spec is None and pillar is None:
+        spec = default
+    elif spec is None and default is None:
+        spec = __salt__['pillar.get'](pillar)
+    elif spec is None:
+        spec = __salt__['pillar.get'](pillar, default)
+
+    result = Spec(spec)
+    result.concretize()
+    return result
+
+
+def installed_spec(specs=None, pillar=None, default=None):
+    """ Returns concretized spec object of installed package """
+    from spack import repo
+    result = spec(specs, pillar=pillar, default=default)
+    if repo.get(result).installed == False:
+        raise Exception("Requested package is not installed")
+    return result
+
+
+def python_spec(spec=None):
+    """ Returns formatted name for given or default python """
+    _init_spack()
+
+    if spec is None:
+        spec = __salt__['pillar.get']("python", "python@3")
+
+    if spec == 2 or spec == "2" or spec == "python2":
+        spec = "python@2"
+    elif spec == 3 or spec == "3" or spec == "python3":
+        spec = "python@3"
+
+    return installed_spec(spec)
+
+
+def python(spec=None):
+    result = python_spec(spec)
+    return "{}@{}".format(result.name, result.version)
+
+
+def python_exec(spec=None):
+    result = python_spec(spec)
+    return "{}/bin/python{}".format(result.prefix, result.version[0])
