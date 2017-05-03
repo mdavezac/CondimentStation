@@ -4,6 +4,7 @@
 lua:
   pkg.installed
 
+{% if grains['os'] == "MacOS" %}
 luarocks install luafilesystem:
   cmd.run:
     - unless: /usr/local/bin/lua -e 'require "lfs"'
@@ -16,6 +17,11 @@ funwith:
   pkg.installed:
     - taps: homebrew/science
     - name: lmod
+{% else %}
+funwith packages:
+  pkg.installed:
+    - pkgs: ['lua', 'lua-posix', 'lua-filesystem', 'lmod']
+{% endif %}
 
 {{workspaces}}:
   file.directory:

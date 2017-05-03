@@ -88,14 +88,23 @@ def _gccs(prefix="/usr/local/Cellar"):
 
 
 def main():
+    from sys import platform
     grains = {}
     grains.update(_user())
     grains.update(_shell())
     grains.update(_home())
-    grains.update(_pythons())
-    grains.update(_programs("cmake"))
-    grains.update(_programs("git"))
-    grains.update(_programs("pcre", "pcregrep"))
-    grains.update(_mac_version())
-    grains.update(_gccs())
+    if platform == 'Darwin':
+        grains.update(_pythons())
+        grains.update(_programs("cmake"))
+        grains.update(_programs("git"))
+        grains.update(_programs("pcre", "pcregrep"))
+        grains.update(_mac_version())
+        grains.update(_gccs())
+    elif platform == 'linux2':
+        pythons = {'python@2.7.12': '/usr/', 'python@3.5.2': '/usr'}
+        grains.update({'python@2.7.12': '/usr/', 'python@3.5.2': '/usr'})
+        grains.update({'pythons': pythons})
+        grains.update({'gits': {'git@2.7.4': '/usr/'}})
+        grains.update({'gccs': { 'gcc@5.4.0': {'cc': '/usr/bin/gcc-5', 'cxx': '/usr/bin/g++-5'}}})
+        grains.update({"mac_version": "Linux"})
     return grains

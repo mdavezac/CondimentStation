@@ -10,12 +10,12 @@ condiment_repo=git@github.com:UCL-RITS/CondimentStation.git
 mkdir -p $(pwd)/build
 
 if [ ! -d "$virtenv" ]; then
-  python -m virtualenv $virtenv
+  python -m virtualenv --system-site-packages $virtenv
   . $virtenv/bin/activate
-  pip install --upgrade pip salt click GitPython mako pytest
+  pip install --upgrade pip salt click GitPython mako pytest ipython
 fi
 
-if [[ "$(uname)" -eq "Darwin" ]] && [[ ! -e /usr/local/bin/brew ]]
+if [[ "$(uname)" == "Darwin" ]] && [[ ! -e /usr/local/bin/brew ]]
 then
    sudo chown -R $(whoami) /usr/local
    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
