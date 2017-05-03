@@ -24,8 +24,8 @@ spack compilers:
     - name: {{config_dir}}/compilers.yaml
     - template: jinja
     - defaults:
-        mac_version: {{grains['mac_version']}}
-        gccs: {{grains['gccs']}}
+        mac_version: {{grains.get('mac_version', None)}}
+        gccs: {{grains.get('gccs', {})}}
     - source: {{spack['compilers_file']}}
     - makedirs: True
 {% endif %}
@@ -36,10 +36,10 @@ spack external packages:
     - name: {{config_dir}}/packages.yaml
     - template: jinja
     - defaults:
-        pythons: {{grains['pythons']}}
-        cmakes: {{grains['cmakes']}}
-        gits: {{grains['gits']}}
-        pcres: {{grains['pcres']}}
+        pythons: {{grains.get('pythons', {})}}
+        cmakes: {{grains.get('cmakes', {})}}
+        gits: {{grains.get('gits', {})}}
+        pcres: {{grains.get('pcres', {})}}
     - source: {{spack['external_packages']}}
     - makedirs: True
 {% endif %}
