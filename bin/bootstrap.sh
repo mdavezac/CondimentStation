@@ -4,13 +4,12 @@ set -e
 prefix=$(pwd)
 condiment_dir=$prefix/CondimentStation
 virtenv=$prefix/build/salt-env
-pysaltdir=$virtenv/lib/python2.7/site-packages/salt
 condiment_repo=git@github.com:UCL-RITS/CondimentStation.git
 
 mkdir -p $(pwd)/build
 
 if [ ! -d "$virtenv" ]; then
-  python -m virtualenv --system-site-packages $virtenv
+  python3 -m venv $virtenv
   . $virtenv/bin/activate
   pip install --upgrade pip salt click GitPython mako pytest ipython
 fi
