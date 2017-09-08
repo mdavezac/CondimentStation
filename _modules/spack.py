@@ -45,12 +45,11 @@ def defaults(key=None, value=None):
     repo_prefix = join(home, '.spack_repos')
     values = {
         'directory': spack_directory(),
-        'config_dir':
-            __salt__['pillar.get']('spack:config_location', config_dir),
-        'repo_prefix':
-            __salt__['pillar.get']('spack:repo_prefix', repo_prefix),
-        'scope':
-            __salt__['pillar.get']('spack:default_config_location', dls)
+        'config_dir': __salt__['pillar.get']('spack:config_location',
+                                             config_dir),
+        'repo_prefix': __salt__['pillar.get']('spack:repo_prefix',
+                                              repo_prefix),
+        'scope': __salt__['pillar.get']('spack:default_config_location', dls)
     }
     values['config_dir'] = canonicalize_path(values['config_dir'])
     values['repo_prefix'] = canonicalize_path(values['repo_prefix'])
@@ -181,7 +180,12 @@ def is_installed(name, compiler=None):
     return True
 
 
-def install(name, keep_prefix=False, keep_stage=False, install_deps=True, environs=None, compiler=None):
+def install(name,
+            keep_prefix=False,
+            keep_stage=False,
+            install_deps=True,
+            environs=None,
+            compiler=None):
     _init_spack()
     from spack import repo
     from spack.store import db as installed_db
@@ -190,9 +194,13 @@ def install(name, keep_prefix=False, keep_stage=False, install_deps=True, enviro
     if not isinstance(name, str):
         results = [], []
         for pkg in name:
-            a, b = install(pkg, keep_prefix=keep_prefix, keep_stage=keep_stage,
-                           install_deps=install_deps, environs=environs,
-                           compiler=compiler)
+            a, b = install(
+                pkg,
+                keep_prefix=keep_prefix,
+                keep_stage=keep_stage,
+                install_deps=install_deps,
+                environs=environs,
+                compiler=compiler)
             results[0].extend(a)
             results[1].extend(b)
         return results
@@ -210,8 +218,7 @@ def install(name, keep_prefix=False, keep_stage=False, install_deps=True, enviro
             package.do_install(
                 keep_prefix=keep_prefix,
                 keep_stage=keep_stage,
-                install_deps=install_deps
-            )
+                install_deps=install_deps)
     return [p.name for p in new_pkgs if p.installed], \
         [p.name for p in new_pkgs if not p.installed]
 
@@ -224,8 +231,8 @@ def compiler_suite(spec=None):
     if spec is None:
         spec = __salt__['pillar.get']("compiler", "gcc")
 
-    compiler = max(compilers_for_spec(
-        CompilerSpec(spec)), key=lambda x: x.version)
+    compiler = max(
+        compilers_for_spec(CompilerSpec(spec)), key=lambda x: x.version)
     return compiler
 
 
@@ -257,7 +264,7 @@ def installed_spec(specs=None, pillar=None, default=None):
     """ Returns concretized spec object of installed package """
     from spack import repo
     result = spec(specs, pillar=pillar, default=default)
-    if repo.get(result).installed == False:
+    if repo.get(result).installed is False:
         raise Exception("Requested package is not installed")
     return result
 

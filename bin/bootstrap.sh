@@ -11,7 +11,7 @@ mkdir -p $(pwd)/build
 if [ ! -d "$virtenv" ]; then
   python3 -m venv $virtenv
   . $virtenv/bin/activate
-  pip install --upgrade pip salt click GitPython mako pytest ipython
+  pip install --upgrade pip salt click GitPython mako pytest ipython virtualenv
 fi
 
 if [[ "$(uname)" == "Darwin" ]] && [[ ! -e /usr/local/bin/brew ]]
