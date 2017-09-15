@@ -39,7 +39,8 @@ def display_output(result, opts, minimize=True):
         salt.output.display_output(result, None, opts)
         return False
 
-    isgood = lambda x: (not isinstance(x, dict)) or x.get('result', True)
+    def isgood(x):
+        return (not isinstance(x, dict)) or x.get('result', True)
     if minimize:
         def passback(x):
             if not isinstance(x, dict):
@@ -49,9 +50,10 @@ def display_output(result, opts, minimize=True):
             else:
                 return "passed"
     else:
-        passback = lambda x: x
+        def passback(x):
+            return x
     passed = {k: passback(v) for k, v in result.items() if isgood(v)}
-    failed = {k: v for k, v in result.items() if isgood(v) == False}
+    failed = {k: v for k, v in result.items() if isgood(v) is False}
     if len(passed):
         salt.output.display_output(passed, None, opts)
     if len(failed):
@@ -121,7 +123,8 @@ def syspath(prefix):
         'SPM_FORMULA_PATH="{prefix}/build/spm/salt"\n'
         'SPM_PILLAR_PATH="{prefix}/build/spm/pillar"\n'
         'SPM_REACTOR_PATH="{prefix}/build/spm/reactor"\n'
-        'BASE_THORIUM_ROOTS_DIR=None'.format(prefix=prefix)
+        'BASE_THORIUM_ROOTS_DIR=None\n'
+        'SHARE_DIR="{prefix}/share"'.format(prefix=prefix)
     )
 
 
@@ -167,7 +170,8 @@ def pillar(prefix, user):
         'condiment_dir: {condiment}\n'
         'condiment_python: {executable}\n'
         'condiment_build_dir: {prefix}/build\n'.format(
-            condiment=condiment_dir, user=user, prefix=prefix, executable=executable)
+            condiment=condiment_dir, user=user, prefix=prefix,
+            executable=executable)
     )
 
 
