@@ -6,7 +6,7 @@ condiment_station:
         - footer: |
             set_alias("ispack", "spack python -c \"from IPython import embed; embed()\"")
 
-UCL-RITS/CondimentStation:
+mdavezac/CondimentStation:
   github.latest:
     - target: {{pillar['condiment_dir']}}
     - force_fetch: True

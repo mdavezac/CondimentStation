@@ -94,7 +94,7 @@ Assuming it contains:
 ```YAML
 condiments:
    chilly-oil:
-       github: UCL-RITS/black-garlic
+       github: mdavezac/black-garlic
 ```
 
 Then running:
@@ -103,7 +103,7 @@ Then running:
 pinch.py run condiments
 ```
 
-Will download UCL-RITS' black-garlic into the `chilly-oil` subdirectory of the main directory. From
+Will download mdavezac's black-garlic into the `chilly-oil` subdirectory of the main directory. From
 there, it can be used directly by running `pinch.py run chilly-oil.some_state` or by
 including states in your own black-garlic.
 
