@@ -27,12 +27,14 @@ def _pythons(prefix="/usr/local/Cellar"):
         v = search(r"\/(\d\.\d\.\d+)(?:_\d+)?\/", path).group(1)
         result["python@" + v] = path
 
-    python2 = max([u for u in result.keys() if parse(u)
-                   < parse("3.0.0")], key=parse)
+    python2 = max(
+        [u for u in result.keys() if parse(u) < parse("3.0.0")], key=parse)
     python3 = max(result.keys(), key=parse)
-    return {"python2": result[python2],
-            "python3": result[python3],
-            "pythons": result}
+    return {
+        "python2": result[python2],
+        "python3": result[python3],
+        "pythons": result
+    }
 
 
 def _programs(program, bin=None, prefix="/usr/local/Cellar"):
@@ -72,13 +74,17 @@ def _gccs(prefix="/usr/local/Cellar"):
 
     result = {}
     paths = join(prefix, "gcc*", "[0-9].[0-9].[0-9]*", "bin")
-    possibles = {"cc": "gcc-[0-9]*", "cxx": "g++-*",
-                 "f77": "gfortran-*", "fc": "gfortran-*"}
+    possibles = {
+        "cc": "gcc-[0-9]*",
+        "cxx": "g++-*",
+        "f77": "gfortran-*",
+        "fc": "gfortran-*"
+    }
     for path in glob(join(paths)):
         v = search(r"\/(\d\.\d\.\d+)(?:_\d+)?\/", path).group(1)
         compilers = {}
 
-        for comp, name in possibles.iteritems():
+        for comp, name in possibles.items():
             if len(glob(join(path, name))):
                 compilers[comp] = glob(join(path, name))[-1]
 
@@ -93,18 +99,25 @@ def main():
     grains.update(_user())
     grains.update(_shell())
     grains.update(_home())
-    if platform == 'Darwin':
+    if platform.lower() == 'darwin':
         grains.update(_pythons())
         grains.update(_programs("cmake"))
         grains.update(_programs("git"))
         grains.update(_programs("pcre", "pcregrep"))
         grains.update(_mac_version())
         grains.update(_gccs())
-    elif platform == 'linux2':
+    elif platform.lower() == 'linux2':
         pythons = {'python@2.7.12': '/usr/', 'python@3.5.2': '/usr'}
         grains.update({'python@2.7.12': '/usr/', 'python@3.5.2': '/usr'})
         grains.update({'pythons': pythons})
         grains.update({'gits': {'git@2.7.4': '/usr/'}})
-        grains.update({'gccs': { 'gcc@5.4.0': {'cc': '/usr/bin/gcc-5', 'cxx': '/usr/bin/g++-5'}}})
+        grains.update({
+            'gccs': {
+                'gcc@5.4.0': {
+                    'cc': '/usr/bin/gcc-5',
+                    'cxx': '/usr/bin/g++-5'
+                }
+            }
+        })
         grains.update({"mac_version": "Linux"})
     return grains
