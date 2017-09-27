@@ -22,7 +22,7 @@ def _get_virtualenv(name, prefix, virtualenv):
 
 
 def _update_states(whole, parts):
-    if (not __opts__['test']) and parts['result'] == False:
+    if (__opts__['test'] is False) and (parts['result'] is False):
         whole['result'] = True
     whole['changes'].update(parts['changes'])
     if 'comment' in parts:
@@ -44,6 +44,7 @@ def add_vimrc(name, source_dir=None, width=None, tabs=None,
     defaults = {
         'prefix': name,
         'width': width,
+        'colorcolumn': width + 1,
         'tabs': tabs,
         'footer': footer,
         'makeprg': makeprg
@@ -51,7 +52,8 @@ def add_vimrc(name, source_dir=None, width=None, tabs=None,
     defaults.update(**kwargs)
     return __states__['file.managed'](
         join(name, '.vimrc'),
-        source=['salt://files/funwith/vimrc.jinja', 'salt://funwith/vimrc.jinja'],
+        source=['salt://files/funwith/vimrc.jinja',
+                'salt://funwith/vimrc.jinja'],
         defaults=defaults,
         template='jinja'
     )
@@ -138,7 +140,8 @@ def modulefile(name, prefix=None, cwd=None, footer=None, virtualenv=None,
     }
     return __states__['file.managed'](
         join(defaults('modulefiles'), name + ".lua"),
-        source=['salt://files/funwith/project.jinja.lua', 'salt://funwith/project.jinja.lua'],
+        source=['salt://files/funwith/project.jinja.lua',
+                'salt://funwith/project.jinja.lua'],
         template='jinja', context=context, **kwargs
     )
 

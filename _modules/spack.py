@@ -74,7 +74,7 @@ def module_name(name, compiler=None):
         mods = {pkg.dag_hash(): pkg for pkg in installed_db.query(spec)}
         if spec.dag_hash() not in mods:
             raise Exception("Could not find package %s" % spec)
-        result.append(mt(mods[spec.dag_hash()]).use_name)
+        result.append(mt(mods[spec.dag_hash()]).layout.use_name)
     return result
 
 
