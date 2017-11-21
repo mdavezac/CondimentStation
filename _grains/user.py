@@ -60,6 +60,8 @@ def _mac_version():
     from platform import mac_ver
     ver = parse(mac_ver()[0])
 
+    if parse("10.14") > ver >= parse("10.13"):
+        return {"mac_version": "highsierra"}
     if parse("10.13") > ver >= parse("10.12"):
         return {"mac_version": "sierra"}
     if parse("10.12") > ver >= parse("10.11"):
