@@ -51,6 +51,14 @@ spack repo {{name}}:
     - github: {{url}}
 {% endfor %}
 
+spack bootstrap:
+  cmd.run:
+    - name: |
+        source $SPACK_ROOT/share/spack/setup-env.sh
+        spack bootstrap
+    - env:
+        - SPACK_ROOT: {{directory}}
+
 {% if spack.get('packages', None) != None %}
 spack default packages:
   spack.installed:
