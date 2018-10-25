@@ -166,7 +166,7 @@ def is_installed(name, compiler=None):
     _init_spack()
     from spack import repo
     from spack.cmd import parse_specs
-    names = [name] if isinstance(name, str) else name
+    names = [name] if isinstance(name, (str, unicode)) else name
     for name in names:
         if compiler is not None:
             name = name.split()
@@ -191,7 +191,7 @@ def install(name,
     from spack.store import db as installed_db
     from spack.cmd import parse_specs
     from os import environ
-    if not isinstance(name, str):
+    if not isinstance(name, (str, unicode)):
         results = [], []
         for pkg in name:
             a, b = install(

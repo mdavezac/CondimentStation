@@ -56,6 +56,7 @@ spack bootstrap:
     - name: |
         source $SPACK_ROOT/share/spack/setup-env.sh
         spack bootstrap
+    - shell: /bin/sh
     - env:
         - SPACK_ROOT: {{directory}}
 

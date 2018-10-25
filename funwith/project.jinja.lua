@@ -12,7 +12,6 @@ prepend_path("CMAKE_PREFIX_PATH", homedir)
 prepend_path("DYLD_FALLBACK_LIBRARY_PATH", pathJoin(homedir, "lib"))
 -- otherwise ctypes.util.find_library fails
 append_path("DYLD_FALLBACK_LIBRARY_PATH", pathJoin("/", "usr", "lib"))
-prepend_path("PATH", pathJoin(homedir, "bin"))
 
 {% if julia_package_dir -%}
 setenv("JULIA_PKGDIR", "{{julia_package_dir}}")

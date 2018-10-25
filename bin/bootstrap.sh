@@ -5,13 +5,14 @@ prefix=$(pwd)
 condiment_dir=$prefix/CondimentStation
 virtenv=$prefix/build/salt-env
 condiment_repo=git@github.com:UCL-RITS/CondimentStation.git
+py=python2
 
 mkdir -p $(pwd)/build
 
 if [ ! -d "$virtenv" ]; then
-  python3 -m venv $virtenv
+  $py -m virtualenv $virtenv
   . $virtenv/bin/activate
-  pip install --upgrade pip salt click GitPython mako pytest ipython virtualenv packaging
+  $py -m pip install --upgrade pip salt click GitPython mako pytest ipython virtualenv packaging
 fi
 
 if [[ "$(uname)" == "Darwin" ]] && [[ ! -e /usr/local/bin/brew ]]

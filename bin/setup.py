@@ -108,9 +108,11 @@ def server_hierarchy(prefix):
 @click.argument('prefix', default=default_prefix, type=click.Path(), nargs=1)
 def syspath(prefix):
     from py.path import local
+    from os.path import  expanduser
     from salt import __file__ as saltfile
     local(local(saltfile).dirname).join("_syspaths.py").write(
         'ROOT_DIR="{prefix}"\n'
+        'HOME_DIR="{homedir}"\n'
         'CONFIG_DIR="{prefix}/build/etc/salt"\n'
         'CACHE_DIR="{prefix}/build/var/cache/salt"\n'
         'SOCK_DIR="{prefix}/build/var/run/salt"\n'
@@ -124,7 +126,7 @@ def syspath(prefix):
         'SPM_PILLAR_PATH="{prefix}/build/spm/pillar"\n'
         'SPM_REACTOR_PATH="{prefix}/build/spm/reactor"\n'
         'BASE_THORIUM_ROOTS_DIR=None\n'
-        'SHARE_DIR="{prefix}/share"'.format(prefix=prefix)
+        'SHARE_DIR="{prefix}/share"'.format(prefix=prefix, homedir=expanduser("~/"))
     )
 
 
